@@ -1,0 +1,2 @@
+${AnsiColor.BRIGHT_BLUE}:: Cool 🤓  :: Running Spring Boot ${spring-boot.version} ::
+:: https://www.dev.tech ::${AnsiColor.DEFAULT}

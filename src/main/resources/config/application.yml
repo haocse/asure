@@ -10,17 +10,6 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
----
-# Conditionally disable springdoc on missing api-docs profile
-spring:
-  config:
-    activate:
-      on-profile: '!api-docs'
-springdoc:
-  api-docs:
-    enabled: false
----
-
 spring:
   application:
     name: asure
@@ -70,13 +59,13 @@ spring:
       matching-strategy: ant_path_matcher
   task:
     execution:
-      thread-name-prefix: my-app-task-
+      thread-name-prefix: asure-task-
       pool:
         core-size: 2
         max-size: 50
         queue-capacity: 10000
     scheduling:
-      thread-name-prefix: my-app-scheduling-
+      thread-name-prefix: asure-scheduling-
       pool:
         size: 2
   thymeleaf:
@@ -101,7 +90,7 @@ info:
 
 jhipster:
   clientApp:
-    name: 'asure'
+    name: 'asureApp'
   # By default CORS is disabled. Uncomment to enable.
   # cors:
   #   allowed-origins: "http://localhost:8100,http://localhost:9000"
@@ -110,11 +99,13 @@ jhipster:
   #   exposed-headers: "Authorization,Link,X-Total-Count,X-${jhipster.clientApp.name}-alert,X-${jhipster.clientApp.name}-error,X-${jhipster.clientApp.name}-params"
   #   allow-credentials: true
   #   max-age: 1800
+  mail:
+    from: asure@localhost
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/**
     management-include-pattern: ${server.servlet.context-path:}/management/**
-    title: My App API
-    description: My App API documentation
+    title: Asure API
+    description: Asure API documentation
     version: 0.0.1
     terms-of-service-url:
     contact-name:
