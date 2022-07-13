@@ -13,6 +13,10 @@ import javax.validation.constraints.*;
  */
 public class AdminUserDTO {
 
+    public static final int PASSWORD_MIN_LENGTH = 4;
+
+    public static final int PASSWORD_MAX_LENGTH = 100;
+
     private Long id;
 
     @NotBlank
@@ -32,6 +36,9 @@ public class AdminUserDTO {
 
     @Size(max = 256)
     private String imageUrl;
+
+    @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
+    private String password;
 
     private boolean activated = false;
 
@@ -158,6 +165,15 @@ public class AdminUserDTO {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     // prettier-ignore

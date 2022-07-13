@@ -6,12 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { getUser, getRoles, updateUser, createUser, reset } from './user-management.reducer';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import PasswordStrengthBar from "app/shared/layout/password/password-strength-bar";
 
 export const UserManagementUpdate = (props: RouteComponentProps<{ login: string }>) => {
   const [isNew] = useState(!props.match.params || !props.match.params.login);
   const dispatch = useAppDispatch();
-  const [password, setPassword] = useState('');
 
   useEffect(() => {
     if (isNew) {
@@ -43,8 +41,6 @@ export const UserManagementUpdate = (props: RouteComponentProps<{ login: string 
   const loading = useAppSelector(state => state.userManagement.loading);
   const updating = useAppSelector(state => state.userManagement.updating);
   const authorities = useAppSelector(state => state.userManagement.authorities);
-
-  const updatePassword = event => setPassword(event.target.value);
 
   return (
     <div>
@@ -127,21 +123,6 @@ export const UserManagementUpdate = (props: RouteComponentProps<{ login: string 
                   validate: v => isEmail(v) || 'Your email is invalid.',
                 }}
               />
-
-              {!user.id && <ValidatedField
-                name="password"
-                label="Password"
-                placeholder={'Place a password'}
-                type="password"
-                onChange={updatePassword}
-                validate={{
-                  required: {value: true, message: 'Your password is required.'},
-                  minLength: {value: 4, message: 'Your password is required to be at least 4 characters.'},
-                  maxLength: {value: 50, message: 'Your password cannot be longer than 50 characters.'},
-                }}
-                data-cy="firstPassword"
-              />}
-              {!user.id && <PasswordStrengthBar password={password}/>}
               <ValidatedField type="checkbox" name="activated" check value={true} disabled={!user.id} label="Activated" />
               <ValidatedField type="select" name="authorities" multiple label="Profiles">
                 {authorities.map(role => (
@@ -150,6 +131,8 @@ export const UserManagementUpdate = (props: RouteComponentProps<{ login: string 
                   </option>
                 ))}
               </ValidatedField>
+
+
               <Button tag={Link} to="/admin/user-management" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

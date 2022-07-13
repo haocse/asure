@@ -33,19 +33,11 @@ export const Home = () => {
               </Link>
               , you can try the default accounts:
               <br />- Administrator (login=&quot;admin&quot; and password=&quot;admin&quot;)
-              <br />- Mentor (login=&quot;user&quot; and password=&quot;user&quot;).
+              <br />- Mentor (login=&quot;mentor&quot; and password=&quot;mentor&quot;).
               <br />- Student (login=&quot;user&quot; and password=&quot;user&quot;).
-            </Alert>
-
-            <Alert color="warning">
-              You do not have an account yet?&nbsp;
-              <Link to="/account/register" className="alert-link">
-                Register a new account
-              </Link>
             </Alert>
           </div>
         )}
-
 
       </Col>
     </Row>
