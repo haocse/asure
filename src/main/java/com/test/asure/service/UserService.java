@@ -276,4 +276,13 @@ public class UserService {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
 
+    /**
+     * Get list of users by given authority.
+     * @param authority
+     * @param pageable
+     * @return
+     */
+    public Page<AdminUserDTO> getUsersByAuthority(String authority, Pageable pageable) {
+        return userRepository.findAllByAuthoritiesNameContaining(authority, pageable).map(AdminUserDTO::new);
+    }
 }

@@ -52,9 +52,6 @@ public class PublicUserResource {
             return ResponseEntity.badRequest().build();
         }
 
-
-        // filter users by authorities
-
         final Page<UserDTO> page = userService.getAllPublicUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -69,6 +66,23 @@ public class PublicUserResource {
         log.debug("REST request to get User : {}", login);
 
         return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
+    }
+
+
+    /**
+     * @param authority
+     * @param pageable
+     * @return
+     */
+    @GetMapping("/users/authorities/{authority}")
+    public ResponseEntity<List<AdminUserDTO>> getUsersByAuthority(@PathVariable String authority, @org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+        log.debug("REST request to get all users by authority : {}", authority);
+        if (!onlyContainsAllowedProperties(pageable)) {
+            return ResponseEntity.badRequest().build();
+        }
+        final Page<AdminUserDTO> page = userService.getUsersByAuthority(authority, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**

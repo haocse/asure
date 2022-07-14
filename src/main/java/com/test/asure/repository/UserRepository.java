@@ -37,4 +37,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // get users by filtering authorities
     @EntityGraph(attributePaths = "authorities")
     Page<User> findAllByAuthoritiesIsNotNullAndActivatedIsTrue(Pageable pageable);
+
+    // get list of uses by authority
+    Optional<List<User>> findAllByAuthorities_Name(String authority);
+
+    Page<User> findAllByAuthoritiesNameContaining(String authorityName, Pageable pageable);
+
 }

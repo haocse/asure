@@ -20,6 +20,7 @@ export const UserManagement = (props: RouteComponentProps<any>) => {
   const getUsersFromProps = () => {
     dispatch(
       getUsersAsAdmin({
+        query: account.authorities[0] === 'ROLE_MENTOR' ? 'STUDENT' : 'MENTOR',
         page: pagination.activePage - 1,
         size: pagination.itemsPerPage,
         sort: `${pagination.sort},${pagination.order}`,

@@ -143,7 +143,9 @@ export const UserManagementUpdate = (props: RouteComponentProps<{ login: string 
               />}
               {!user.id && <PasswordStrengthBar password={password}/>}
               <ValidatedField type="checkbox" name="activated" check value={true} disabled={!user.id} label="Activated" />
-              <ValidatedField type="select" name="authorities" multiple label="Profiles">
+              <ValidatedField validate={{
+                required: {value: true, message: 'One role must be selected.'},
+              }} type="select" name="authorities" multiple label="Profiles">
                 {authorities.map(role => (
                   <option value={role} key={role}>
                     {role}
