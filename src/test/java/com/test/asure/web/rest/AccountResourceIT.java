@@ -90,6 +90,7 @@ class AccountResourceIT {
         user.setEmail("john.doe@jhipster.com");
         user.setImageUrl("http://placehold.it/50x50");
         user.setAuthorities(authorities);
+        user.setPassword("password");
         userService.createUser(user);
 
         restAccountMockMvc

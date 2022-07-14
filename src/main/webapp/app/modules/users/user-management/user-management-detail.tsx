@@ -62,7 +62,7 @@ export const UserManagementDetail = (props: RouteComponentProps<{ login: string 
           </dd>
         </dl>
       </Row>
-      <Button tag={Link} to="/admin/user-management" replace color="info">
+      <Button tag={Link} to="/users" replace color="info">
         <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
       </Button>
     </div>

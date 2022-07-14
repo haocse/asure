@@ -133,7 +133,7 @@ export const UserManagementUpdate = (props: RouteComponentProps<{ login: string 
               </ValidatedField>
 
 
-              <Button tag={Link} to="/admin/user-management" replace color="info">
+              <Button tag={Link} to="/users" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">Back</span>

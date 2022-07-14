@@ -1,6 +1,9 @@
 package com.test.asure.web.rest;
 
+import com.test.asure.config.Constants;
+import com.test.asure.security.AuthoritiesConstants;
 import com.test.asure.service.UserService;
+import com.test.asure.service.dto.AdminUserDTO;
 import com.test.asure.service.dto.UserDTO;
 import java.util.*;
 import java.util.Collections;
@@ -12,9 +15,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
+
+import javax.validation.constraints.Pattern;
 
 @RestController
 @RequestMapping("/api")
@@ -45,6 +52,9 @@ public class PublicUserResource {
             return ResponseEntity.badRequest().build();
         }
 
+
+        // filter users by authorities
+
         final Page<UserDTO> page = userService.getAllPublicUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -52,6 +62,13 @@ public class PublicUserResource {
 
     private boolean onlyContainsAllowedProperties(Pageable pageable) {
         return pageable.getSort().stream().map(Sort.Order::getProperty).allMatch(ALLOWED_ORDERED_PROPERTIES::contains);
+    }
+
+    @GetMapping("/users/{login}")
+    public ResponseEntity<AdminUserDTO> getUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
+        log.debug("REST request to get User : {}", login);
+
+        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
     }
 
     /**
