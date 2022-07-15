@@ -4,11 +4,9 @@ import thunk from 'redux-thunk';
 import sinon from 'sinon';
 
 import userManagement, {
-  getUsers,
   getUsersAsAdmin,
   getRoles,
   getUser,
-  createUser,
   updateUser,
   deleteUser,
   reset,
@@ -58,7 +56,7 @@ describe('User management reducer tests', () => {
     });
 
     it('should set state to loading', () => {
-      testMultipleTypes([getUsers.pending.type, getUsersAsAdmin.pending.type, getUser.pending.type], {}, state => {
+      testMultipleTypes([getUsersAsAdmin.pending.type, getUser.pending.type], {}, state => {
         expect(state).toMatchObject({
           errorMessage: null,
           updateSuccess: false,
@@ -68,7 +66,7 @@ describe('User management reducer tests', () => {
     });
 
     it('should set state to updating', () => {
-      testMultipleTypes([createUser.pending.type, updateUser.pending.type, deleteUser.pending.type], {}, state => {
+      testMultipleTypes([updateUser.pending.type, deleteUser.pending.type], {}, state => {
         expect(state).toMatchObject({
           errorMessage: null,
           updateSuccess: false,
@@ -83,10 +81,8 @@ describe('User management reducer tests', () => {
       testMultipleTypes(
         [
           getUsersAsAdmin.rejected.type,
-          getUsers.rejected.type,
           getUser.rejected.type,
           getRoles.rejected.type,
-          createUser.rejected.type,
           updateUser.rejected.type,
           deleteUser.rejected.type,
         ],
@@ -105,18 +101,6 @@ describe('User management reducer tests', () => {
   });
 
   describe('Success', () => {
-    it('should update state according to a successful fetch users request', () => {
-      const headers = { ['x-total-count']: 42 };
-      const payload = { data: 'some handsome users', headers };
-      const toTest = userManagement(undefined, { type: getUsers.fulfilled.type, payload });
-
-      expect(toTest).toMatchObject({
-        loading: false,
-        users: payload.data,
-        totalItems: headers['x-total-count'],
-      });
-    });
-
     it('should update state according to a successful fetch user request', () => {
       const payload = { data: 'some handsome user' };
       const toTest = userManagement(undefined, { type: getUser.fulfilled.type, payload });
@@ -134,16 +118,6 @@ describe('User management reducer tests', () => {
       expect(toTest).toMatchObject({
         loading: false,
         authorities: payload.data,
-      });
-    });
-
-    it('should set state to successful update', () => {
-      testMultipleTypes([createUser.fulfilled.type, updateUser.fulfilled.type], { data: 'some handsome user' }, types => {
-        expect(types).toMatchObject({
-          updating: false,
-          updateSuccess: true,
-          user: 'some handsome user',
-        });
       });
     });
 
@@ -221,36 +195,6 @@ describe('User management reducer tests', () => {
       expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
     });
 
-    it('dispatches FETCH_USERS_PENDING and FETCH_USERS_FULFILLED actions', async () => {
-      const expectedActions = [
-        {
-          type: getUsers.pending.type,
-        },
-        {
-          type: getUsers.fulfilled.type,
-          payload: resolvedObject,
-        },
-      ];
-      await store.dispatch(getUsers({}));
-      expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
-      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
-    });
-
-    it('dispatches FETCH_USERS_PENDING and FETCH_USERS_FULFILLED actions with pagination options', async () => {
-      const expectedActions = [
-        {
-          type: getUsers.pending.type,
-        },
-        {
-          type: getUsers.fulfilled.type,
-          payload: resolvedObject,
-        },
-      ];
-      await store.dispatch(getUsers({ page: 1, size: 20, sort: 'id,desc' }));
-      expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
-      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
-    });
-
     it('dispatches FETCH_ROLES_PENDING and FETCH_ROLES_FULFILLED actions', async () => {
       const expectedActions = [
         {
@@ -279,25 +223,6 @@ describe('User management reducer tests', () => {
       await store.dispatch(getUser(username));
       expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
       expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
-    });
-
-    it('dispatches CREATE_USER_PENDING and CREATE_USER_FULFILLED actions', async () => {
-      const expectedActions = [
-        {
-          type: createUser.pending.type,
-        },
-        {
-          type: getUsersAsAdmin.pending.type,
-        },
-        {
-          type: createUser.fulfilled.type,
-          payload: resolvedObject,
-        },
-      ];
-      await store.dispatch(createUser({}));
-      expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
-      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
-      expect(store.getActions()[2]).toMatchObject(expectedActions[2]);
     });
 
     it('dispatches UPDATE_USER_PENDING and UPDATE_USER_FULFILLED actions', async () => {

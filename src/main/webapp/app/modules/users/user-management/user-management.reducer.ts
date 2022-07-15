@@ -20,15 +20,11 @@ const adminUrl = 'api/users/authorities';
 
 // Async Actions
 
-export const getUsers = createAsyncThunk('userManagement/fetch_users', async ({ page, size, sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
-  return axios.get<IUser[]>(requestUrl);
-});
-
 export const getUsersAsAdmin = createAsyncThunk('userManagement/fetch_users_as_admin', async ({ query, page, size, sort }: IQueryParams) => {
   const requestUrl = `${adminUrl}/${query}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return axios.get<IUser[]>(requestUrl);
 });
+
 
 export const getRoles = createAsyncThunk('userManagement/fetch_roles', async () => {
   return axios.get<any[]>(`api/authorities`);
@@ -43,15 +39,7 @@ export const getUser = createAsyncThunk(
   { serializeError: serializeAxiosError }
 );
 
-export const createUser = createAsyncThunk(
-  'userManagement/create_user',
-  async (user: IUser, thunkAPI) => {
-    const result = await axios.post<IUser>(adminUrl, user);
-    thunkAPI.dispatch(getUsersAsAdmin({}));
-    return result;
-  },
-  { serializeError: serializeAxiosError }
-);
+
 
 export const updateUser = createAsyncThunk(
   'userManagement/update_user',
@@ -98,28 +86,28 @@ export const UserManagementSlice = createSlice({
         state.updateSuccess = true;
         state.user = defaultValue;
       })
-      .addMatcher(isFulfilled(getUsers, getUsersAsAdmin), (state, action) => {
+      .addMatcher(isFulfilled(getUsersAsAdmin), (state, action) => {
         state.loading = false;
         state.users = action.payload.data;
         state.totalItems = parseInt(action.payload.headers['x-total-count'], 10);
       })
-      .addMatcher(isFulfilled(createUser, updateUser), (state, action) => {
+      .addMatcher(isFulfilled(updateUser), (state, action) => {
         state.updating = false;
         state.loading = false;
         state.updateSuccess = true;
         state.user = action.payload.data;
       })
-      .addMatcher(isPending(getUsers, getUsersAsAdmin, getUser), state => {
+      .addMatcher(isPending(getUsersAsAdmin, getUser), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;
       })
-      .addMatcher(isPending(createUser, updateUser, deleteUser), state => {
+      .addMatcher(isPending(updateUser, deleteUser), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.updating = true;
       })
-      .addMatcher(isRejected(getUsers, getUsersAsAdmin, getUser, getRoles, createUser, updateUser, deleteUser), (state, action) => {
+      .addMatcher(isRejected(getUsersAsAdmin, getUser, getRoles, updateUser, deleteUser), (state, action) => {
         state.loading = false;
         state.updating = false;
         state.updateSuccess = false;

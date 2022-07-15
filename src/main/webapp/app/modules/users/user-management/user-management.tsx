@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { APP_DATE_FORMAT } from 'app/config/constants';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getUsersAsAdmin, updateUser } from './user-management.reducer';
+import { getUsersAsAdmin } from './user-management.reducer';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const UserManagement = (props: RouteComponentProps<any>) => {
@@ -68,15 +68,6 @@ export const UserManagement = (props: RouteComponentProps<any>) => {
     getUsersFromProps();
   };
 
-  const toggleActive = user => () => {
-    dispatch(
-      updateUser({
-        ...user,
-        activated: !user.activated,
-      })
-    );
-  };
-
   const { match } = props;
   const account = useAppSelector(state => state.authentication.account);
   const users = useAppSelector(state => state.userManagement.users);
@@ -91,9 +82,6 @@ export const UserManagement = (props: RouteComponentProps<any>) => {
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
             <FontAwesomeIcon icon="sync" spin={loading} /> Refresh List
           </Button>
-          <Link to={`${match.url}/new`} className="btn btn-primary jh-create-entity">
-            <FontAwesomeIcon icon="plus" /> Create a new user
-          </Link>
         </div>
       </h2>
       <Table responsive striped>

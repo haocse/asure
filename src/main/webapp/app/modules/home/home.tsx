@@ -34,7 +34,7 @@ export const Home = () => {
               , you can try the default accounts:
               <br />- Administrator (login=&quot;admin&quot; and password=&quot;admin&quot;)
               <br />- Mentor (login=&quot;mentor&quot; and password=&quot;mentor&quot;).
-              <br />- Student (login=&quot;user&quot; and password=&quot;user&quot;).
+              <br />- Student (login=&quot;student&quot; and password=&quot;student&quot;).
             </Alert>
           </div>
         )}
