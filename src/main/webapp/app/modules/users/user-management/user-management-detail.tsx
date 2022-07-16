@@ -28,7 +28,6 @@ export const UserManagementDetail = (props: RouteComponentProps<{ login: string 
           <dt>Login</dt>
           <dd>
             <span>{user.login}</span>&nbsp;
-            {user.activated ? <Badge color="success">Activated</Badge> : <Badge color="danger">Deactivated</Badge>}
           </dd>
           <dt>First Name</dt>
           <dd>{user.firstName}</dd>

@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { APP_DATE_FORMAT } from 'app/config/constants';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getUsersAsAdmin } from './user-management.reducer';
+import { getUsers } from './user-management.reducer';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const UserManagement = (props: RouteComponentProps<any>) => {
@@ -19,7 +19,7 @@ export const UserManagement = (props: RouteComponentProps<any>) => {
 
   const getUsersFromProps = () => {
     dispatch(
-      getUsersAsAdmin({
+      getUsers({
         query: account.authorities[0] === 'ROLE_MENTOR' ? 'STUDENT' : 'MENTOR',
         page: pagination.activePage - 1,
         size: pagination.itemsPerPage,
@@ -99,19 +99,15 @@ export const UserManagement = (props: RouteComponentProps<any>) => {
               Email
               <FontAwesomeIcon icon="sort" />
             </th>
-            <th />
             <th>Profiles</th>
-            <th className="hand" onClick={sort('createdDate')}>
+            <th className="hand">
               Created Date
-              <FontAwesomeIcon icon="sort" />
             </th>
-            <th className="hand" onClick={sort('lastModifiedBy')}>
+            <th className="hand">
               Last Modified By
-              <FontAwesomeIcon icon="sort" />
             </th>
-            <th id="modified-date-sort" className="hand" onClick={sort('lastModifiedDate')}>
+            <th id="modified-date-sort" className="hand">
               Last Modified Date
-              <FontAwesomeIcon icon="sort" />
             </th>
             <th />
           </tr>

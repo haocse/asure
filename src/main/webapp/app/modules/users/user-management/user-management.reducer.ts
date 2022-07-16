@@ -15,13 +15,13 @@ const initialState = {
   totalItems: 0,
 };
 
-const apiUrl = 'api/users';
-const adminUrl = 'api/users/authorities';
+const apiUserUrl = 'api/users';
+const apiUrl = 'api/users/authorities';
 
 // Async Actions
 
-export const getUsersAsAdmin = createAsyncThunk('userManagement/fetch_users_as_admin', async ({ query, page, size, sort }: IQueryParams) => {
-  const requestUrl = `${adminUrl}/${query}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+export const getUsers = createAsyncThunk('userManagement/fetch_users', async ({ query, page, size, sort }: IQueryParams) => {
+  const requestUrl = `${apiUrl}/${query}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return axios.get<IUser[]>(requestUrl);
 });
 
@@ -33,34 +33,12 @@ export const getRoles = createAsyncThunk('userManagement/fetch_roles', async () 
 export const getUser = createAsyncThunk(
   'userManagement/fetch_user',
   async (id: string) => {
-    const requestUrl = `${adminUrl}/${id}`;
+    const requestUrl = `${apiUserUrl}/${id}`;
     return axios.get<IUser>(requestUrl);
   },
   { serializeError: serializeAxiosError }
 );
 
-
-
-export const updateUser = createAsyncThunk(
-  'userManagement/update_user',
-  async (user: IUser, thunkAPI) => {
-    const result = await axios.put<IUser>(adminUrl, user);
-    thunkAPI.dispatch(getUsersAsAdmin({}));
-    return result;
-  },
-  { serializeError: serializeAxiosError }
-);
-
-export const deleteUser = createAsyncThunk(
-  'userManagement/delete_user',
-  async (id: string, thunkAPI) => {
-    const requestUrl = `${adminUrl}/${id}`;
-    const result = await axios.delete<IUser>(requestUrl);
-    thunkAPI.dispatch(getUsersAsAdmin({}));
-    return result;
-  },
-  { serializeError: serializeAxiosError }
-);
 
 export type UserManagementState = Readonly<typeof initialState>;
 
@@ -81,33 +59,18 @@ export const UserManagementSlice = createSlice({
         state.loading = false;
         state.user = action.payload.data;
       })
-      .addCase(deleteUser.fulfilled, state => {
-        state.updating = false;
-        state.updateSuccess = true;
-        state.user = defaultValue;
-      })
-      .addMatcher(isFulfilled(getUsersAsAdmin), (state, action) => {
+      .addMatcher(isFulfilled(getUsers), (state, action) => {
         state.loading = false;
         state.users = action.payload.data;
         state.totalItems = parseInt(action.payload.headers['x-total-count'], 10);
       })
-      .addMatcher(isFulfilled(updateUser), (state, action) => {
-        state.updating = false;
-        state.loading = false;
-        state.updateSuccess = true;
-        state.user = action.payload.data;
-      })
-      .addMatcher(isPending(getUsersAsAdmin, getUser), state => {
+
+      .addMatcher(isPending(getUsers, getUser), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;
       })
-      .addMatcher(isPending(updateUser, deleteUser), state => {
-        state.errorMessage = null;
-        state.updateSuccess = false;
-        state.updating = true;
-      })
-      .addMatcher(isRejected(getUsersAsAdmin, getUser, getRoles, updateUser, deleteUser), (state, action) => {
+      .addMatcher(isRejected(getUsers, getUser, getRoles), (state, action) => {
         state.loading = false;
         state.updating = false;
         state.updateSuccess = false;
